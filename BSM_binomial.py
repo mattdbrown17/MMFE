@@ -10,7 +10,7 @@ def main_program():
     d = input("Please enter a value for 'd' (down factor)):")
     d = float(d)
     u = input("Please enter a value for 'u' (up factor):")
-    d = float(d)
+    u = float(u)
     type = input("What type of option are you pricing? Please enter the one of the following strings: 'Put', 'Call', 'Exotic':")
     type = str(type)
     if (type=="Put") | (type=="Call"):
@@ -23,7 +23,9 @@ def main_program():
 
     print(S_0, u, d, T, K, type)
     V_T = define_final_Vs(S_0, u, d, T, K, type)
-    return V_prev(V_T[0], V_T[1])
+    Test = v_prev(V_T[0], V_T[1], u, d, r)
+    print(Test)
+    return Test
 
 
 def define_final_Vs(S_0, u, d, T, K, type):
@@ -33,14 +35,14 @@ def define_final_Vs(S_0, u, d, T, K, type):
     the procedure for actually computing the Vs (Put, Call, or Exotic).'''
 
 
-    States = np.array(list(it.product([u, d], repeat=T)))
+    States = np.array(list(it.product([u, d], repeat=T)), dtype=float)
 
     S = np.zeros_like(States, dtype=float)
     S_0col = np.array([S_0]*(2**T))
     S_0col.shape = (2**T, 1)
     S = np.hstack((S_0col, S))
 
-    T = int(T)
+    print(S, States)
     for i in range(1, T+1):
         S[:,i] = S[:,i-1] * States[:,i-1]
 
@@ -71,5 +73,8 @@ def v_prev(VH, VT, u, d, r):
     return V_0
 
 #test
-print(define_final_Vs(1.0, 2.0, .5, 1, 1.2, "Call"))
+#print(define_final_Vs(1, 2, .5, 1, .75, 'Call'))
+#print(" ------------------------- ")
 main_program()
+#print(v_prev(1, 0, 2, .5, .02))
+#main_program()
