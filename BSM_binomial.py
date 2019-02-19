@@ -21,11 +21,15 @@ def main_program():
     if type=="Exotic":
         print("INVALID INPUT")
 
-    print(S_0, u, d, T, K, type)
     V_T = define_final_Vs(S_0, u, d, T, K, type)
-    Test = v_prev(V_T[0], V_T[1], u, d, r)
-    print(Test)
-    return Test
+
+    for i in range(1, T+1):
+        V_Tm1 = np.zeros(2**(T-i))
+        for k in range(0, 2**(T-i)):
+            V_Tm1[k] = v_prev(V_T[2*k], V_T[2*k+1], u, d, r)
+        V_T = V_Tm1
+    print(V_Tm1[0])
+    return V_Tm1[0]
 
 
 def define_final_Vs(S_0, u, d, T, K, type):
@@ -42,7 +46,6 @@ def define_final_Vs(S_0, u, d, T, K, type):
     S_0col.shape = (2**T, 1)
     S = np.hstack((S_0col, S))
 
-    print(S, States)
     for i in range(1, T+1):
         S[:,i] = S[:,i-1] * States[:,i-1]
 
