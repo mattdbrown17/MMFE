@@ -3,30 +3,30 @@ import numpy as np
 
 def main_program():
     ''' This is where I will implement the main method.'''
-    S_0 = input("Please enter the initial stock price:")
+    S_0 = input("Please enter the initial stock price: ")
     S_0 = float(S_0)
-    r = input("Please enter the interest rate:")
+    r = input("Please enter the interest rate: ")
     r = float(r)
-    d = input("Please enter a value for 'd' (down factor)):")
-    d = float(d)
-    u = input("Please enter a value for 'u' (up factor):")
+    u = input("Please enter a value for 'u' (up factor): ")
     u = float(u)
-    type = input("What type of option are you pricing? Please enter the one of the following strings: 'Put', 'Call', 'Exotic':")
-    type = str(type)
-    if (type=="Put") | (type=="Call"):
-        K = input("Please enter the strike price for the option")
+    d = input("Please enter a value for 'd' (down factor)): ")
+    d = float(d)
+    type = input("What type of option are you pricing? This program can handle put and call options. For a call option enter 1. For a put option enter 2: ")
+    type = int(type)
+    if (type==1) | (type==2):
+        K = input("Please enter the strike price for the option: ")
         K = float(K)
-        T = input("Please enter the maturity date of the option (T=?)")
+        T = input("Please enter the maturity date of the option (T=?): ")
         T = int(T)
-    if type=="Exotic":
+    else:
         print("INVALID INPUT")
 
     V_T = define_final_Vs(S_0, u, d, T, K, type)
     V_second_to_last = np.zeros(2)
 
     stock_matrix = get_stock_price_matrix(S_0,u,d,T)
-    print(stock_matrix)
-    print(V_T)
+    #print(stock_matrix)
+    #print(V_T)
 
     for i in range(1, T+1):
         if (len(V_T)==2):
@@ -41,8 +41,8 @@ def main_program():
         #print(V_T)
 
     #print(V_second_to_last)
-    print("To replaicate the option, you should purchase: " + str(delta_0(stock_matrix[:,1],V_second_to_last)))
-    print("The price of the option at time 0 is: " + str(V_Tm1[0]))
+    print("To replaicate the option, you should purchase " + str(delta_0(stock_matrix[:,1],V_second_to_last)) + " shares.")
+    print("The price of the option at time 0 is: $" + str(V_Tm1[0]))
     return V_Tm1[0]
 
 
@@ -74,12 +74,12 @@ def define_final_Vs(S_0, u, d, T, K, type):
     Put Option: V = K - S_T, where this is positive
     Exotic Option: ??? '''
 
-    if type == "Call":
+    if type == 1:
         V_T = S[:,T] - K
         # Some fancy indexing...
         mask = V_T[V_T<0]
         V_T[V_T<0] = 0
-    if type == "Put":
+    if type == 2:
         V_T = K - S[:,T]
         # Some fancy indexing...
         mask = V_T[V_T<0]
